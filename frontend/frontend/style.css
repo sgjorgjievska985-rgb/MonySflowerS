@@ -97,3 +97,43 @@ header {
 .nav-links li a:hover {
     text-decoration: underline;
 }
+.contact {
+    background-color: #fff;
+    margin-top: 40px;
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.contact h2 {
+    color: #b03060;
+}
+
+.contact form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.contact input,
+.contact textarea {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.contact button {
+    background-color: #b03060;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.contact button:hover {
+    background-color: #8b0033;
+}
