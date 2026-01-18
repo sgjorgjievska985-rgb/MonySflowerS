@@ -137,3 +137,11 @@ header {
 .contact button:hover {
     background-color: #8b0033;
 }
+.footer {
+    background-color: #b03060;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    margin-top: 40px;
+}
+
