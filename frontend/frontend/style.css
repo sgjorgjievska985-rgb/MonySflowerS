@@ -34,3 +34,29 @@ li {
     text-align: center;
     font-size: 18px;
 }
+.flowers {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.flower-card {
+    background-color: white;
+    width: 250px;
+    border-radius: 15px;
+    padding: 10px;
+    text-align: center;
+}
+
+.flower-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.flower-card h3 {
+    color: #b03060;
+}
+
