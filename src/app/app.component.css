@@ -13,3 +13,34 @@ p {
   font-size: 18px;
 }
 
+.page {
+  font-family: Arial, sans-serif;
+  background-color: #f8f8f8;
+  min-height: 100vh;
+}
+
+.header {
+  background-color: #d81b60;
+  color: white;
+  padding: 30px;
+  text-align: center;
+}
+
+.content {
+  background: white;
+  margin: 20px auto;
+  padding: 20px;
+  width: 80%;
+  border-radius: 8px;
+}
+
+.content h2 {
+  color: #d81b60;
+}
+
+.footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 10px;
+}
