@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mony's Flowers - Почетна</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <!-- Навбар / Мени -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top">
+        <div class="container">
+            <a class="navbar-header text-white fw-bold fs-3 text-decoration-none" href="index.html">
+                <i class="bi bi-flower1"></i> Mony's Flowers
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item">
+                        <a class="nav-link active fw-semibold" href="index.html">Почетна</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="add-product.html">Додади производ (Админ)</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html"><i class="bi bi-box-arrow-in-right"></i> Најава</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="register.html">Регистрација</a>
+                    </li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-outline-light position-relative" href="#">
+                            <i class="bi bi-cart3"></i> Кошничка
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">2</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Херо Банер -->
+    <header class="bg-white py-5 border-bottom mb-4 text-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold text-success">Свежи цвеќиња за сите ваши моменти</h1>
+            <p class="lead text-muted">Изберете од нашата богата понуда на букети, саксиски цвеќиња и уникатни цветни аранжмани.</p>
+        </div>
+    </header>
+
+    <!-- Главна Содржина -->
+    <main class="container mb-5">
+        
+        <!-- Пребарување и Филтрирање -->
+        <div class="card shadow-sm p-3 mb-4 bg-white rounded">
+            <form class="row g-3">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control" placeholder="Пребарај цвеќе по име...">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <select class="form-select">
+                        <option value="">Сите категории</option>
+                        <option value="buketi">Букети за роденден</option>
+                        <option value="svadbeni">Свадбени аранжмани</option>
+                        <option value="saksiski">Саксиски цвеќиња</option>
+                        <option value="rozi">Премиум Рози</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-success w-100">Пребарај</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Листа на Производи (Grid) -->
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            
+            <!-- Елемент 1 -->
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0">
+                    <img src="https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=500" class="card-img-top" alt="Црвени Рози" style="height: 230px; object-fit: cover;">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-danger">Премиум Рози</span>
+                            <span class="fw-bold text-success fs-5">1.500 ден.</span>
+                        </div>
+                        <h5 class="card-title">Кралевски Црвени Рози</h5>
+                        <p class="card-text text-muted small">Елегантен букет од 101 свежа црвена роза за специјални приговори.</p>
+                    </div>
+                    <div class="card-footer bg-white border-0 d-flex justify-content-between pb-3">
+                        <a href="product-details.html" class="btn btn-outline-success btn-sm">Детали</a>
+                        <a href="edit-product.html" class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil"></i> Измени</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Елемент 2 -->
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0">
+                    <img src="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?w=500" class="card-img-top" alt="Пролетен Аранжман" style="height: 230px; object-fit: cover;">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-info text-dark">Букети</span>
+                            <span class="fw-bold text-success fs-5">900 ден.</span>
+                        </div>
+                        <h5 class="card-title">Пролетно Вдахновение</h5>
+                        <p class="card-text text-muted small">Микс од шарени лалиња и гербери со свежа зелена декорација.</p>
+                    </div>
+                    <div class="card-footer bg-white border-0 d-flex justify-content-between pb-3">
+                        <a href="product-details.html" class="btn btn-outline-success btn-sm">Детали</a>
+                        <a href="edit-product.html" class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil"></i> Измени</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Елемент 3 -->
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0">
+                    <img src="https://images.unsplash.com/photo-1512428559087-560fa5ceab42?w=500" class="card-img-top" alt="Орхидеја" style="height: 230px; object-fit: cover;">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-success">Саксиски</span>
+                            <span class="fw-bold text-success fs-5">1.200 ден.</span>
+                        </div>
+                        <h5 class="card-title">Бела Орхидеја (Фалаенопсис)</h5>
+                        <p class="card-text text-muted small">Дупла бела орхидеја во украсна керамичка саксија.</p>
+                    </div>
+                    <div class="card-footer bg-white border-0 d-flex justify-content-between pb-3">
+                        <a href="product-details.html" class="btn btn-outline-success btn-sm">Детали</a>
+                        <a href="edit-product.html" class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil"></i> Измени</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Футер -->
+    <footer class="bg-dark text-white py-4 mt-auto">
+        <div class="container text-center">
+            <p class="mb-1">&copy; 2026 Mony's Flowers. Сите права се задржани.</p>
+            <small class="text-muted">Проектна задача по Динамички Веб-Апликации</small>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
