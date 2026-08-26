@@ -1,0 +1,24 @@
+{
+  "name": "monysflowers",
+  "version": "1.0.0",
+  "description": "„Проектна задача по Веб Програмирање - Динамичка веб-апликација за цвеќара“.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sgjorgjievska985-rgb/MonySflowerS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/sgjorgjievska985-rgb/MonySflowerS/issues"
+  },
+  "homepage": "https://github.com/sgjorgjievska985-rgb/MonySflowerS#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
