@@ -153,5 +153,27 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="js/add-product.js"></script>
+
+    <!-- Bootstrap Modal за Порачка -->
+<div class="modal fade" id="orderModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title"><i class="bi bi-cart-check"></i> Потврда на нарачка</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p class="fs-5 mb-0">Дали сте сигурни дека сакате да го нарачате овој букет?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Откажи</button>
+        <button type="button" class="btn btn-success" id="confirmOrderBtn" onclick="alert('Успешна нарачка!')" data-bs-dismiss="modal">Потврди нарачка</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
