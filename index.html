@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mony's Flowers - Почетна</title>
-    <!-- Bootstrap 5 CSS -->
+    <title>MonySflowerS - Почетна</title>
+    <!-- Bootstrap CSS & Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 </head>
 <body class="bg-light">
 
-    <!-- Навбар / Мени -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top">
+    <!-- Навбар -->
+   <nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top">
         <div class="container">
             <a class="navbar-header text-white fw-bold fs-3 text-decoration-none" href="index.html">
                 <i class="bi bi-flower1"></i> Mony's Flowers
@@ -45,7 +44,7 @@
         </div>
     </nav>
 
-    <!-- Херо Банер -->
+        <!-- Херо Банер -->
     <header class="bg-white py-5 border-bottom mb-4 text-center">
         <div class="container">
             <h1 class="display-4 fw-bold text-success">Свежи цвеќиња за сите ваши моменти</h1>
@@ -53,166 +52,167 @@
         </div>
     </header>
 
-    <!-- Главна Содржина -->
-    <main class="container mb-5">
+    <!-- Главна содржина -->
+    <div class="container my-5">
+        <h2 class="text-center mb-4 text-success fw-bold">Нашите Производи</h2>
         
-        <!-- Пребарување и Филтрирање -->
-        <div class="card shadow-sm p-3 mb-4 bg-white rounded">
-            <form class="row g-3">
-                <div class="col-md-6">
-                    <div class="input-group">
-                        <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
-                        <input type="text" class="form-control" placeholder="Пребарај цвеќе по име...">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <select class="form-select">
-                        <option value="">Сите категории</option>
-                        <option value="buketi">Букети за роденден</option>
-                        <option value="svadbeni">Свадбени аранжмани</option>
-                        <option value="saksiski">Саксиски цвеќиња</option>
-                        <option value="rozi">Премиум Рози</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <button type="button" class="btn btn-success w-100">Пребарај</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- Листа на Производи (Grid) -->
-        <div class="row row-cols-1 row-cols-md-3 g-4">
+        <!-- КЛУЧНО: Само ЕДЕН <div class="row"> за СИТЕ картички -->
+        <div class="row">
             
-            <!-- Елемент 1 -->
-            <div class="col">
+            <!-- Производ 1: Розово Лале -->
+            <div class="col-md-4 mb-4">
                 <div class="card h-100 shadow-sm border-0">
-                    <img src="https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=500" class="card-img-top" alt="Црвени Рози" style="height: 230px; object-fit: cover;">
-                    <div class="card-body">
+                    <img src="https://images.unsplash.com/photo-1561181286-d3fee7d55364" class="card-img-top" style="height: 180px; object-fit: cover;" alt="Розово Лале">
+                    <div class="card-body d-flex flex-column">
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="badge bg-danger">Премиум Рози</span>
-                            <span class="fw-bold text-success fs-5">1.500 ден.</span>
+                            <span class="badge bg-danger">Лалиња</span>
+                            <h5 class="text-success fw-bold mb-0">1.500 ден.</h5>
                         </div>
-                        <h5 class="card-title">Кралевски Црвени Рози</h5>
-                        <p class="card-text text-muted small">Елегантен букет од 101 свежа црвена роза за специјални приговори.</p>
-                    </div>
-                    <div class="card-footer bg-white border-0 d-flex justify-content-between pb-3">
-                        <a href="product-details.html" class="btn btn-outline-success btn-sm">Детали</a>
-                        <a href="edit-product.html" class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil"></i> Измени</a>
+                        <h4 class="card-title fw-bold">Розово Лале</h4>
+                        <p class="card-text text-muted flex-grow-1">Елегантен букет од лалиња за специјални пригоди.</p>
+                        <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+                            <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#detailsModal" onclick="showDetails('Розово Лале', 'Лалиња', '1.500 ден.', 'Елегантен букет од лалиња за специјални пригоди.', 'https://images.unsplash.com/photo-1561181286-d3fee7d55364')">Детали</button>
+                            <a href="edit-product.html" class="btn btn-outline-warning">✏️ Измени</a>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Елемент 2 -->
-            <div class="col">
+            <!-- Производ 2: Пролетни Лалиња -->
+            <div class="col-md-4 mb-4">
                 <div class="card h-100 shadow-sm border-0">
-                    <img src="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?w=500" class="card-img-top" alt="Пролетен Аранжман" style="height: 230px; object-fit: cover;">
-                    <div class="card-body">
+                    <img src="https://images.unsplash.com/photo-1520763185298-1b434c919102" class="card-img-top" style="height: 180px; object-fit: cover;" alt="Пролетни Лалиња">
+                    <div class="card-body d-flex flex-column">
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="badge bg-info text-dark">Букети</span>
-                            <span class="fw-bold text-success fs-5">900 ден.</span>
+                            <span class="badge bg-warning text-dark">Пролетна Колекција</span>
+                            <h5 class="text-success fw-bold mb-0">1.200 ден.</h5>
                         </div>
-                        <h5 class="card-title">Пролетно Вдахновение</h5>
-                        <p class="card-text text-muted small">Микс од шарени лалиња и гербери со свежа зелена декорација.</p>
-                    </div>
-                    <div class="card-footer bg-white border-0 d-flex justify-content-between pb-3">
-                        <a href="product-details.html" class="btn btn-outline-success btn-sm">Детали</a>
-                        <a href="edit-product.html" class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil"></i> Измени</a>
+                        <h4 class="card-title fw-bold">Пролетни Лалиња</h4>
+                        <p class="card-text text-muted flex-grow-1">Шарен букет од свежи пролетни лалиња во повеќе бои.</p>
+                        <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+                            <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#detailsModal" onclick="showDetails('Пролетни Лалиња', 'Пролетна Колекција', '1.200 ден.', 'Шарен букет од свежи пролетни лалиња во повеќе бои.', 'https://images.unsplash.com/photo-1520763185298-1b434c919102')">Детали</button>
+                            <a href="edit-product.html" class="btn btn-outline-warning">✏️ Измени</a>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Елемент 3 -->
-            <div class="col">
+            <!-- Производ 3: Орхидеја -->
+            <div class="col-md-4 mb-4">
                 <div class="card h-100 shadow-sm border-0">
-                    <img src="https://images.unsplash.com/photo-1512428559087-560fa5ceab42?w=500" class="card-img-top" alt="Орхидеја" style="height: 230px; object-fit: cover;">
-                    <div class="card-body">
+                    <img src="https://images.unsplash.com/photo-1525310072745-f49212b5ac6d" class="card-img-top" style="height: 180px; object-fit: cover;" alt="Орхидеја">
+                    <div class="card-body d-flex flex-column">
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="badge bg-success">Саксиски</span>
-                            <span class="fw-bold text-success fs-5">1.200 ден.</span>
+                            <span class="badge bg-info text-dark">Саксиско Цвеќе</span>
+                            <h5 class="text-success fw-bold mb-0">1.800 ден.</h5>
                         </div>
-                        <h5 class="card-title">Бела Орхидеја (Фалаенопсис)</h5>
-                        <p class="card-text text-muted small">Дупла бела орхидеја во украсна керамичка саксија.</p>
-                    </div>
-                    <div class="card-footer bg-white border-0 d-flex justify-content-between pb-3">
-                        <a href="product-details.html" class="btn btn-outline-success btn-sm">Детали</a>
-                        <a href="edit-product.html" class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil"></i> Измени</a>
+                        <h4 class="card-title fw-bold">Орхидеја</h4>
+                        <p class="card-text text-muted flex-grow-1">Прекрасна орхидеја во саксија, совршен подарок за дом или канцеларија.</p>
+                        <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+                            <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#detailsModal" onclick="showDetails('Орхидеја', 'Саксиско Цвеќе', '1.800 ден.', 'Прекрасна орхидеја во саксија, совршен подарок за дом или канцеларија.', 'https://images.unsplash.com/photo-1525310072745-f49212b5ac6d')">Детали</button>
+                            <a href="edit-product.html" class="btn btn-outline-warning">✏️ Измени</a>
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Производ 4: Мирисни Бели Лилии -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <img src="https://images.unsplash.com/photo-1508610048659-a06b669e3321" class="card-img-top" style="height: 180px; object-fit: cover;" alt="Мирисни Бели Лилии">
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-primary">Елегантна Колекција</span>
+                            <h5 class="text-success fw-bold mb-0">1.600 ден.</h5>
+                        </div>
+                        <h4 class="card-title fw-bold">Мирисни Бели Лилии</h4>
+                        <p class="card-text text-muted flex-grow-1">Прекрасен букет од свежи бели лилии со интензивен и пријатен мирис.</p>
+                        <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+                            <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#detailsModal" onclick="showDetails('Мирисни Бели Лилии', 'Елегантна Колекција', '1.600 ден.', 'Прекрасен букет од свежи бели лилии со интензивен и пријатен мирис.', 'https://images.unsplash.com/photo-1508610048659-a06b669e3321')">Детали</button>
+                            <a href="edit-product.html" class="btn btn-outline-warning">✏️ Измени</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Производ 5: Златни Сончогледи -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <img src="https://images.unsplash.com/photo-1597848212624-a19eb35e2651" class="card-img-top" style="height: 180px; object-fit: cover;" alt="Златни Сончогледи">
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-warning text-dark">Летен Аранжман</span>
+                            <h5 class="text-success fw-bold mb-0">1.100 ден.</h5>
+                        </div>
+                        <h4 class="card-title fw-bold">Златни Сончогледи</h4>
+                        <p class="card-text text-muted flex-grow-1">Весел и светол аранжман од свежи сончогледи кои внесуваат сонце во секој дом.</p>
+                        <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+                            <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#detailsModal" onclick="showDetails('Златни Сончогледи', 'Летен Аранжман', '1.100 ден.', 'Весел и светол аранжман од свежи сончогледи кои внесуваат сонце во секој дом.', 'https://images.unsplash.com/photo-1597848212624-a19eb35e2651')">Детали</button>
+                            <a href="edit-product.html" class="btn btn-outline-warning">✏️ Измени</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Производ 6: Нежни Розови Божури -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <img src="https://images.unsplash.com/photo-1563241527-3004b7be0ffd" class="card-img-top" style="height: 180px; object-fit: cover;" alt="Нежни Розови Божури">
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-danger">Луксузен Букет</span>
+                            <h5 class="text-success fw-bold mb-0">2.100 ден.</h5>
+                        </div>
+                        <h4 class="card-title fw-bold">Нежни Розови Божури</h4>
+                        <p class="card-text text-muted flex-grow-1">Резервиран за посебни моменти — раскошен букет од романтични розови божури.</p>
+                        <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+                            <button class="btn btn-outline-success" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#detailsModal" 
+                                    onclick="showDetails('Нежни Розови Божури', 'Луксузен Букет', '2.100 ден.', 'Резервиран за посебни моменти — раскошен букет од романтични розови божури.', 'https://images.unsplash.com/photo-1563241527-3004b7be0ffd')">
+                                Детали
+                            </button>
+                            <a href="edit-product.html" class="btn btn-outline-warning">✏️ Измени</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div> <!-- Крај на <div class="row"> -->
+    </div>
+
+
+    <!-- Bootstrap Modal за Детали -->
+    <div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title"><i class="bi bi-info-circle"></i> Детали за производ</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center p-4">
+                    <img id="detailsModalImage" src="" class="img-fluid rounded mb-3 shadow-sm" style="max-height: 220px; width: 100%; object-fit: cover;">
+                    <h3 id="detailsModalName" class="fw-bold text-success mb-1"></h3>
+                    <span id="detailsModalCategory" class="badge bg-danger mb-3"></span>
+                    <h4 id="detailsModalPrice" class="text-primary fw-bold mb-3"></h4>
+                    <p id="detailsModalDescription" class="text-muted border-top pt-3"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Затвори</button>
+                </div>
+            </div>
         </div>
-    </main>
+    </div>
 
-    <!-- Футер -->
-    <footer class="bg-dark text-white py-4 mt-auto">
-        <div class="container text-center">
-            <p class="mb-1">&copy; 2026 Mony's Flowers. Сите права се задржани.</p>
-            <small class="text-muted">Проектна задача по Динамички Веб-Апликации</small>
-        </div>
-    </footer>
-
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script src="js/add-product.js"></script>
-
-    <!-- Bootstrap Modal за Порачка -->
-<div class="modal fade" id="orderModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header bg-success text-white">
-        <h5 class="modal-title"><i class="bi bi-cart-check"></i> Потврда на нарачка</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <p class="fs-5 mb-0">Дали сте сигурни дека сакате да го нарачате овој букет?</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Откажи</button>
-        <button type="button" class="btn btn-success" id="confirmOrderBtn" onclick="alert('Успешна нарачка!')" data-bs-dismiss="modal">Потврди нарачка</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Bootstrap Modal за Детали -->
-<div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header bg-success text-white">
-        <h5 class="modal-title" id="detailsModalTitle"><i class="bi bi-info-circle"></i> Детали за производ</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body text-center">
-        <img id="detailsModalImage" src="" class="img-fluid rounded mb-3" style="max-height: 250px; object-fit: cover;" alt="Производ">
-        <h4 id="detailsModalName" class="fw-bold text-success"></h4>
-        <span id="detailsModalCategory" class="badge bg-danger mb-2"></span>
-        <h5 id="detailsModalPrice" class="text-primary fw-bold mb-3"></h5>
-        <p id="detailsModalDescription" class="text-muted"></p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Затвори</button>
-        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#orderModal">Нарачај веднаш</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<button class="btn btn-outline-success" 
-        data-bs-toggle="modal" 
-        data-bs-target="#detailsModal"
-        onclick="showDetails('Кралевски Црвени Рози', 'Премиум Рози', '1.500 ден.', 'Елегантен букет од 101 свежа црвена роза за специјални пригоди.', 'https://images.unsplash.com/photo-1561181286-d3fee7d55364')">
-  Детали
-</button>
-
-<script>
-function showDetails(name, category, price, description, imageUrl) {
-    document.getElementById('detailsModalName').innerText = name;
-    document.getElementById('detailsModalCategory').innerText = category;
-    document.getElementById('detailsModalPrice').innerText = price;
-    document.getElementById('detailsModalDescription').innerText = description;
-    document.getElementById('detailsModalImage').src = imageUrl;
-}
-</script>
+    <script>
+        function showDetails(name, category, price, description, imageUrl) {
+            document.getElementById('detailsModalName').innerText = name;
+            document.getElementById('detailsModalCategory').innerText = category;
+            document.getElementById('detailsModalPrice').innerText = price;
+            document.getElementById('detailsModalDescription').innerText = description;
+            document.getElementById('detailsModalImage').src = imageUrl;
+        }
+    </script>
 </body>
 </html>
