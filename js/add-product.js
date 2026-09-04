@@ -1,60 +1,39 @@
-// 1. Ги земаме сите производи од бекендот при вчитување
-let allProducts = [];
+// Се зема формата за додавање од HTML
+const addProductForm = document.getElementById('add-product-form');
 
-async function fetchProducts() {
-    try {
-        const response = await fetch('http://localhost:3000/api/products');
-        allProducts = await response.json();
-        renderProducts(allProducts); // Ги прикажува сите производи на почеток
-    } catch (err) {
-        console.error('Грешка при преземање на производите:', err);
-    }
-}
+if (addProductForm) {
+    addProductForm.addEventListener('submit', async (e) => {
+        e.preventDefault(); // Го спречува превчитувањето на страницата
 
-// 2. Функција за прикажување производи на страницата
-function renderProducts(products) {
-    const container = document.getElementById('productsContainer'); // Провери го id-то на контејнерот
-    container.innerHTML = '';
+        // Се земаат вредностите од полињата во формата
+        const newProduct = {
+            name: document.getElementById('name').value,
+            category: document.getElementById('category').value,
+            price: Number(document.getElementById('price').value),
+            description: document.getElementById('description').value,
+            imageUrl: document.getElementById('imageUrl').value
+        };
 
-    if (products.length === 0) {
-        container.innerHTML = '<p class="text-center">Не се пронајдени производи.</p>';
-        return;
-    }
+        try {
+            // Твојот fetch повик овде:
+            const response = await fetch('/api/products', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newProduct)
+            });
 
-    products.forEach(product => {
-        container.innerHTML += `
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <img src="${product.imageUrl}" class="card-img-top" alt="${product.name}">
-                    <div class="card-body">
-                        <h5 class="card-title">${product.name}</h5>
-                        <p class="card-text">${product.description}</p>
-                        <p class="fw-bold">${product.price} ден.</p>
-                    </div>
-                </div>
-            </div>
-        `;
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Успешно зачувано во MongoDB:', data);
+                alert('Производот е успешно додаден!');
+                window.location.href = 'index.html'; // Пренасочување кон почетната
+            } else {
+                alert('Грешка при додавање на производот.');
+            }
+        } catch (err) {
+            console.error('Грешка:', err);
+        }
     });
 }
-
-// 3. Настан кога ќе се кликне копчето "Пребарај"
-document.getElementById('searchBtn').addEventListener('click', function() {
-    const selectedValue = document.getElementById('categorySelect').value.toLowerCase();
-
-    // Ако не е избрано ништо или е избрано "Сите", прикажи ги сите
-    if (!selectedValue || selectedValue === 'all') {
-        renderProducts(allProducts);
-        return;
-    }
-
-    // Филтрирај според категоријата или името
-    const filteredProducts = allProducts.filter(product => 
-        product.category.toLowerCase().includes(selectedValue) || 
-        product.name.toLowerCase().includes(selectedValue)
-    );
-
-    renderProducts(filteredProducts);
-});
-
-// Повикај ја функцијата за иницијално вчитување
-fetchProducts();
