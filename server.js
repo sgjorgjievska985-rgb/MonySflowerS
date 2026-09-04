@@ -9,8 +9,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/monysflowers';
 
-// Middleware
-app.use(express.json());
+// Middleware за JSON парсирање и статички фајлови
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
 
 // Swagger Конфигурација
