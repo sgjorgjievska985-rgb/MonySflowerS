@@ -1,35 +1,36 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.querySelector('form');
-    if (!form) return;
+document.getElementById('addProductForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
 
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
+    // 1. Земи ги вредностите од сите полиња
+    const productData = {
+        name: document.getElementById('name').value,
+        category: document.getElementById('category').value,
+        price: Number(document.getElementById('price').value),
+        stock: Number(document.getElementById('stock').value),
+        description: document.getElementById('description').value,
+        imageUrl: document.getElementById('imageUrl').value
+    };
 
-        const productData = {
-            name: document.getElementById('name').value,
-            category: document.getElementById('category').value,
-            price: Number(document.getElementById('price').value),
-            description: document.getElementById('description').value,
-            imageUrl: document.getElementById('imageUrl').value
-        };
+    try {
+        // 2. Испрати POST барање до бекендот
+        const response = await fetch('http://localhost:3000/api/products', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(productData)
+        });
 
-        try {
-            const res = await fetch('/api/products', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(productData)
-            });
+        const data = await response.json();
 
-            if (res.ok) {
-                const data = await response.json();
-                console.log('Успешно зачувано во MongoDB:', data);
-                alert('Производот е успешно додаден!');
-                window.location.href = 'index.html';
-            } else {
-                alert('Грешка при зачувување на производот.');
-            }
-        } catch (err) {
-            console.error('Грешка:', err);
+        if (response.ok) {
+            alert('Производот е успешно додаден!');
+            window.location.href = 'index.html'; // Редирекција до почетната
+        } else {
+            alert('Грешка: ' + (data.error || 'Неуспешно додавање'));
         }
-    });
+    } catch (err) {
+        console.error('Грешка при поврзување:', err);
+        alert('Серверот не е достапен.');
+    }
 });
