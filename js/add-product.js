@@ -6,12 +6,11 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
 
         const productData = {
-            name: document.getElementById('productName').value,
-            category: document.getElementById('productCategory').value,
-            price: Number(document.getElementById('productPrice').value),
-            stock: Number(document.getElementById('productStock').value),
-            imageUrl: document.getElementById('productImage').value,
-            description: document.getElementById('productDescription').value
+            name: document.getElementById('name').value,
+            category: document.getElementById('category').value,
+            price: Number(document.getElementById('price').value),
+            description: document.getElementById('description').value,
+            imageUrl: document.getElementById('imageUrl').value
         };
 
         try {
@@ -22,6 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (res.ok) {
+                const data = await response.json();
+                console.log('Успешно зачувано во MongoDB:', data);
                 alert('Производот е успешно додаден!');
                 window.location.href = 'index.html';
             } else {
