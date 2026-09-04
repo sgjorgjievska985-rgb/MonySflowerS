@@ -21,11 +21,11 @@ const swaggerOptions = {
         info: {
             title: "Mony's Flowers REST API",
             version: '1.0.0',
-            description: 'API за управување со производи, категории и залихи во цвеќарата'
+            description: 'API за управување со производи и корисници'
         },
         servers: [{ url: `http://localhost:${PORT}` }]
     },
-    apis: ['./server.js']
+    apis: ['./routes/*.js', './server.js']
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
