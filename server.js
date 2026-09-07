@@ -2,35 +2,48 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
-const swaggerJsDoc = require('swagger-jsdoc');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 1. Swagger Конфигурација (Внимавај apis да го вклучува './routes/*.js')
-const swaggerOptions = {
-    swaggerDefinition: {
-        openapi: '3.0.0',
-        info: {
-            title: "Mony's Flowers API",
-            version: '1.0.0',
-            description: 'API документација за производи и корисници'
+// Поврзување со база
+mongoose.connect('mongodb://127.0.0.1:27017/monysflowers')
+    .then(() => console.log('Успешна конекција со MongoDB!'))
+    .catch(err => console.error('Грешка со база:', err));
+
+// Модели
+const Product = mongoose.model('Product', new mongoose.Schema({
+    name: String, category: String, price: Number, stock: Number, description: String, imageUrl: String
+}));
+
+const User = mongoose.model('User', new mongoose.Schema({
+    username: String, email: String, password: String, role: { type: String, default: 'user' }
+}));
+
+// Swagger Документација
+const swaggerSpec = {
+    openapi: '3.0.0',
+    info: { title: "Mony's Flowers API", version: '1.0.0' },
+    paths: {
+        '/api/products': {
+            get: { summary: 'Сите производи', responses: { 200: { description: 'OK' } } },
+            post: { summary: 'Додај производ', responses: { 201: { description: 'Created' } } }
         },
-        servers: [{ url: 'http://localhost:3000' }]
-    },
-    apis: ['./routes/*.js', './server.js'] // Ќе ги скенира сите рути во папката routes
+        '/api/users': {
+            get: { summary: 'Сите корисници', responses: { 200: { description: 'OK' } } },
+            post: { summary: 'Додај корисник', responses: { 201: { description: 'Created' } } }
+        }
+    }
 };
 
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// 2. Регистрирање на рутите
-const productRoutes = require('./routes/products'); // или како што ти се вика рутерот за производи
-const userRoutes = require('./routes/users');
+// Рути
+app.get('/api/products', async (req, res) => res.json(await Product.find()));
+app.post('/api/products', async (req, res) => res.status(201).json(await new Product(req.body).save()));
 
-app.use('/api/products', productRoutes);
-app.use('/api/users', userRoutes); // Нов ендпоинт за корисници
+app.get('/api/users', async (req, res) => res.json(await User.find()));
+app.post('/api/users', async (req, res) => res.status(201).json(await new User(req.body).save()));
 
-// Стартување на серверот
-app.listen(3000, () => console.log('Серверот работи на порт 3000'));
+app.listen(3000, () => console.log('Серверот работи на http://localhost:3000'));
