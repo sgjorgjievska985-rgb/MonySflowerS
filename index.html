@@ -244,6 +244,74 @@
             document.getElementById('detailsModalDescription').innerText = description;
             document.getElementById('detailsModalImage').src = imageUrl;
         }
+
+        // Вчитување и прикажување на производите
+async function loadProducts() {
+    try {
+        const response = await fetch('http://localhost:3000/api/products');
+        const products = await response.json();
+        
+        // Внимавај ID-то 'products-container' да се совпаѓа со <div> во твојот HTML
+        const container = document.getElementById('products-container'); 
+        if (!container) return;
+        
+        container.innerHTML = '';
+
+        products.forEach(product => {
+            container.innerHTML += `
+                <div class="product-card">
+                    <img src="${product.imageUrl || 'https://via.placeholder.com/150'}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>Категорија: ${product.category}</p>
+                    <p>Цена: ${product.price} ден.</p>
+                    <p>Залиха: ${product.stock}</p>
+                </div>
+            `;
+        });
+    } catch (error) {
+        console.error('Грешка при вчитување производи:', error);
+    }
+}
+
+// Додавање нов производ преку форма
+document.addEventListener('DOMContentLoaded', () => {
+    loadProducts(); // Се повикува веднаш штом се вчита страницата
+
+    const productForm = document.getElementById('add-product-form');
+    if (productForm) {
+        productForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const newProduct = {
+                name: document.getElementById('name').value,
+                category: document.getElementById('category').value,
+                price: Number(document.getElementById('price').value),
+                stock: Number(document.getElementById('stock').value),
+                description: document.getElementById('description').value,
+                imageUrl: document.getElementById('imageUrl').value
+            };
+
+            try {
+                const response = await fetch('http://localhost:3000/api/products', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newProduct)
+                });
+
+                if (response.ok) {
+                    alert('Производот е успешно додаден!');
+                    productForm.reset();
+                    loadProducts(); // Освежи ја листата
+                } else {
+                    alert('Грешка при додавање производ.');
+                }
+            } catch (error) {
+                console.error('Грешка:', error);
+            }
+        });
+    }
+});
     </script>
+
 </body>
 </html>
