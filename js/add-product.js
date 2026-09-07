@@ -10,6 +10,7 @@ if (addProductForm) {
             name: document.getElementById('name').value,
             category: document.getElementById('category').value,
             price: Number(document.getElementById('price').value),
+            stock: Number(document.getElementById('stock').value),
             description: document.getElementById('description').value,
             imageUrl: document.getElementById('imageUrl').value
         };

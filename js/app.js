@@ -1,7 +1,5 @@
-// Во функцијата каде што ги изцртуваш производите:
-const productsContainer = document.getElementById('products-container'); // или твојот container ID
+const productsContainer = document.getElementById('products-container'); 
 
-// Кога ги изминуваш производите:
 products.forEach(product => {
     const card = document.createElement('div');
     card.className = 'col-md-4 mb-4';
@@ -22,7 +20,6 @@ products.forEach(product => {
         </div>
     `;
 
-    // 🔽 КЛУЧНИОТ ДЕЛ: Директно му ги доделуваме податоците на копчето 🔽
     const detailsBtn = card.querySelector('.btn-details');
     detailsBtn.addEventListener('click', () => {
         document.getElementById('detailsModalName').innerText = product.name;

@@ -4,15 +4,23 @@ const path = require('path');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
 const bcrypt = require('bcryptjs');
+const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/monysflowers';
 
 // Middleware за JSON парсирање и статички фајлови
+app.use(cors());
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
+
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'login.html')));
+app.get('/register', (req, res) => res.sendFile(path.join(__dirname, 'register.html')));
+app.get('/add-product', (req, res) => res.sendFile(path.join(__dirname, 'add-product.html')));
+app.get('/edit-product', (req, res) => res.sendFile(path.join(__dirname, 'edit-product.html')));
 
 const Product = mongoose.models.Product || mongoose.model('Product', new mongoose.Schema({
     name: { type: String, required: true },
