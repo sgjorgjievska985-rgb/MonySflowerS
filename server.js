@@ -38,6 +38,28 @@ const User = mongoose.models.User || mongoose.model('User', new mongoose.Schema(
     role: { type: String, enum: ['user', 'admin'], default: 'user' }
 }));
 
+const Category = mongoose.models.Category || mongoose.model('Category', new mongoose.Schema({
+    name: { type: String, required: true },
+    description: String
+}));
+
+const Order = mongoose.models.Order || mongoose.model('Order', new mongoose.Schema({
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    products: [{
+        product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+        quantity: { type: Number, default: 1 }
+    }],
+    totalPrice: { type: Number, required: true },
+    createdAt: { type: Date, default: Date.now }
+}));
+
+const Review = mongoose.models.Review || mongoose.model('Review', new mongoose.Schema({
+    product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+    username: { type: String, required: true },
+    comment: { type: String, required: true },
+    rating: { type: Number, min: 1, max: 5, required: true }
+}));
+
 // Swagger Конфигурација
 const swaggerOptions = {
     swaggerDefinition: {
@@ -298,6 +320,63 @@ app.delete('/api/users/:id', async (req, res) => {
 // Root рута
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.delete('/db', async (req, res) => {
+    try {
+        await Product.deleteMany({});
+        await User.deleteMany({});
+        await Category.deleteMany({});
+        await Order.deleteMany({});
+        await Review.deleteMany({});
+        res.json({ message: 'Базата е успешно исчистена (сите податоци се избришани).' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// 2. Внесување на иницијални (Seed) податоци
+app.post('/db', async (req, res) => {
+    try {
+        // Бришење на стари за чист почеток
+        await Product.deleteMany({});
+        await User.deleteMany({});
+        await Category.deleteMany({});
+        await Order.deleteMany({});
+        await Review.deleteMany({});
+
+        // Додавање категории
+        const categories = await Category.insertMany([
+            { name: 'Букети', description: 'Свежи цветни букети за сите пригоди' },
+            { name: 'Собни растенија', description: 'Зелени саксиски растенија' }
+        ]);
+
+        // Додавање производи
+        const products = await Product.insertMany([
+            { name: 'Црвени Рози', category: 'Букети', price: 1500, stock: 10, description: 'Букет од 101 црвена роза', imageUrl: '' },
+            { name: 'Орхидеја', category: 'Собни растенија', price: 800, stock: 5, description: 'Бела елегантна орхидеја', imageUrl: '' }
+        ]);
+
+        // Додавање демо администратор
+        const hashedPassword = await bcrypt.hash('admin123', 10);
+        const adminUser = await User.create({
+            username: 'admin',
+            email: 'admin@monysflowers.com',
+            password: hashedPassword,
+            role: 'admin'
+        });
+
+        res.status(201).json({
+            message: 'Иницијалните податоци се успешно внесени!',
+            stats: {
+                categories: categories.length,
+                products: products.length,
+                adminCreated: adminUser.username
+            }
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 app.listen(PORT, () => {
