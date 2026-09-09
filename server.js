@@ -1,27 +1,22 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-const swaggerUi = require('swagger-ui-express');
-const swaggerJsDoc = require('swagger-jsdoc');
-const bcrypt = require('bcryptjs');
 const cors = require('cors');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const swaggerUi = require('swagger-ui-express');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/monysflowers';
+const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_key_123';
 
-// Middleware за JSON парсирање и статички фајлови
 app.use(cors());
-app.use(express.json()); 
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
 
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
-app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'login.html')));
-app.get('/register', (req, res) => res.sendFile(path.join(__dirname, 'register.html')));
-app.get('/add-product', (req, res) => res.sendFile(path.join(__dirname, 'add-product.html')));
-app.get('/edit-product', (req, res) => res.sendFile(path.join(__dirname, 'edit-product.html')));
-
+// --- 5 КОЛЕКЦИИ (МОДЕЛИ) ---
 const Product = mongoose.models.Product || mongoose.model('Product', new mongoose.Schema({
     name: { type: String, required: true },
     category: { type: String, required: true },
@@ -60,268 +55,330 @@ const Review = mongoose.models.Review || mongoose.model('Review', new mongoose.S
     rating: { type: Number, min: 1, max: 5, required: true }
 }));
 
-// Swagger Конфигурација
-const swaggerOptions = {
-    swaggerDefinition: {
-        openapi: '3.0.0',
-        info: {
-            title: "Mony's Flowers REST API",
-            version: '1.0.0',
-            description: 'API за управување со производи и корисници'
+// --- SWAGGER КОНФИГУРАЦИЈА ---
+const swaggerDocument = {
+  openapi: "3.0.0",
+  info: {
+    title: "Mony's Flowers API",
+    version: "1.0.0",
+    description: "REST API за онлајн продавница за цвеќиња со 5 колекции и JWT автентикација"
+  },
+  servers: [
+    {
+      url: "http://localhost:3000"
+    }
+  ],
+  tags: [
+    { name: "Products", description: "Работа со производи" },
+    { name: "Users", description: "Автентикација и корисници" },
+    { name: "Categories", description: "Категории на производи" },
+    { name: "Orders", description: "Управување со нарачки" },
+    { name: "Reviews", description: "Оцени и рецензии" },
+    { name: "Database", description: "Административни операции со базата" },
+    { name: "Currency", description: "Конверзија на валути" }
+  ],
+  paths: {
+    "/api/products": {
+      get: {
+        tags: ["Products"],
+        summary: "Ги враќа сите производи",
+        responses: { "200": { description: "Успешно" } }
+      },
+      post: {
+        tags: ["Products"],
+        summary: "Креира нов производ",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  name: { type: "string", example: "Лале" },
+                  category: { type: "string", example: "Букети" },
+                  price: { type: "number", example: 300 },
+                  stock: { type: "number", example: 15 },
+                  description: { type: "string", example: "Свежи пролетни лалиња" },
+                  imageUrl: { type: "string", example: "" }
+                },
+                required: ["name", "category", "price", "stock"]
+              }
+            }
+          }
         },
-        servers: [{ url: `http://localhost:${PORT}` }]
+        responses: { "201": { description: "Креирано" } }
+      }
     },
-    apis: ['./routes/*.js', './server.js']
+    "/api/products/{id}": {
+      get: {
+        tags: ["Products"],
+        summary: "Враќа производ по единечен ID",
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+        responses: { "200": { description: "Успешно" } }
+      },
+      put: {
+        tags: ["Products"],
+        summary: "Ажурира постоечки производ",
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+        responses: { "200": { description: "Ажурирано" } }
+      },
+      delete: {
+        tags: ["Products"],
+        summary: "Брише производ по ID",
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+        responses: { "200": { description: "Избришано" } }
+      }
+    },
+    "/api/users": {
+      get: {
+        tags: ["Users"],
+        summary: "Ги враќа сите корисници",
+        responses: { "200": { description: "Успешно" } }
+      }
+    },
+    "/api/users/register": {
+      post: {
+        tags: ["Users"],
+        summary: "Регистрација на нов корисник",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  username: { type: "string", example: "korisnik1" },
+                  email: { type: "string", example: "korisnik1@gmail.com" },
+                  password: { type: "string", example: "123456" },
+                  role: { type: "string", example: "user" }
+                },
+                required: ["username", "email", "password"]
+              }
+            }
+          }
+        },
+        responses: { "201": { description: "Успешна регистрација" } }
+      }
+    },
+    "/api/users/login": {
+      post: {
+        tags: ["Users"],
+        summary: "Најава на корисник и генерација на JWT",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  username: { type: "string", example: "korisnik1" },
+                  password: { type: "string", example: "123456" }
+                },
+                required: ["username", "password"]
+              }
+            }
+          }
+        },
+        responses: { "200": { description: "Успешна најава" } }
+      }
+    },
+    "/api/users/{id}": {
+      delete: {
+        tags: ["Users"],
+        summary: "Брише корисник по ID",
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+        responses: { "200": { description: "Избришано" } }
+      }
+    },
+    "/api/categories": {
+      get: {
+        tags: ["Categories"],
+        summary: "Ги враќа сите категории",
+        responses: { "200": { description: "Успешно" } }
+      },
+      post: {
+        tags: ["Categories"],
+        summary: "Креира нова категорија",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  name: { type: "string", example: "Свадбени букети" },
+                  description: { type: "string", example: "Цвеќиња за свадбени прослави" }
+                },
+                required: ["name"]
+              }
+            }
+          }
+        },
+        responses: { "201": { description: "Креирано" } }
+      }
+    },
+    "/api/orders": {
+      get: {
+        tags: ["Orders"],
+        summary: "Ги враќа сите нарачки",
+        responses: { "200": { description: "Успешно" } }
+      },
+      post: {
+        tags: ["Orders"],
+        summary: "Креира нова нарачка",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  user: { type: "string", example: "ВНЕСИ_USER_ID_ТУКА" },
+                  products: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        product: { type: "string", example: "ВНЕСИ_PRODUCT_ID_ТУКА" },
+                        quantity: { type: "number", example: 2 }
+                      }
+                    }
+                  },
+                  totalPrice: { type: "number", example: 3000 }
+                },
+                required: ["user", "totalPrice"]
+              }
+            }
+          }
+        },
+        responses: { "201": { description: "Креирано" } }
+      }
+    },
+    "/api/reviews": {
+      get: {
+        tags: ["Reviews"],
+        summary: "Ги враќа сите рецензии",
+        responses: { "200": { description: "Успешно" } }
+      },
+      post: {
+        tags: ["Reviews"],
+        summary: "Додава нова рецензија",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  product: { type: "string", example: "ВНЕСИ_PRODUCT_ID_ТУКА" },
+                  username: { type: "string", example: "korisnik1" },
+                  comment: { type: "string", example: "Прекрасен букет!" },
+                  rating: { type: "number", example: 5 }
+                },
+                required: ["product", "username", "comment", "rating"]
+              }
+            }
+          }
+        },
+        responses: { "201": { description: "Креирано" } }
+      }
+    },
+    "/api/convert-price/{amount}": {
+      get: {
+        tags: ["Currency"],
+        summary: "Конверзија на цена од MKD во EUR",
+        parameters: [{ name: "amount", in: "path", required: true, schema: { type: "number" } }],
+        responses: { "200": { description: "Успешна конверзија" } }
+      }
+    },
+    "/db": {
+      post: {
+        tags: ["Database"],
+        summary: "Внесување иницијални (Seed) податоци во базата",
+        responses: { "201": { description: "Базата е успешно наполнета" } }
+      },
+      delete: {
+        tags: ["Database"],
+        summary: "Бришење на сите податоци од сите 5 колекции",
+        responses: { "200": { description: "Базата е исчистена" } }
+      }
+    }
+  }
 };
 
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+// Се сервира Swagger UI директно од објектот
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// Поврзување со MongoDB
+// --- ПОВРЗУВАЊЕ СО BAZA ---
 mongoose.connect(MONGO_URI)
-    .then(() => console.log(' Успешно поврзано со MongoDB базата'))
-    .catch(err => console.error(' Грешка при поврзување со MongoDB:', err));
+    .then(() => console.log('Успешно поврзано со MongoDB'))
+    .catch(err => console.error('Грешка со MongoDB:', err));
 
-// --- REST API РУТИ ЗА PRODUCTS ---
+// --- API РУТИ ---
 
-/**
- * @openapi
- * /api/products:
- *   get:
- *     summary: Ги враќа сите производи
- *     tags: [Products]
- *     responses:
- *       200:
- *         description: Успешно преземени сите производи
- */
+// 1. PRODUCTS
 app.get('/api/products', async (req, res) => {
-    try {
-        const products = await Product.find();
-        res.json(products);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+    try { res.json(await Product.find()); } catch (err) { res.status(500).json({ error: err.message }); }
 });
-
-/**
- * @openapi
- * /api/products/{id}:
- *   get:
- *     summary: Враќа производ по единечен ID
- *     tags: [Products]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Успешно пронајден производ
- *       404:
- *         description: Производот не е пронајден
- */
-app.get('/api/products/:id', async (req, res) => {
-    try {
-        const product = await Product.findById(req.params.id);
-        if (!product) return res.status(404).json({ message: 'Производот не е пронајден' });
-        res.json(product);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-/**
- * @openapi
- * /api/products:
- *   post:
- *     summary: Креира нов производ
- *     tags: [Products]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *               category:
- *                 type: string
- *               price:
- *                 type: number
- *               stock:
- *                 type: number
- *               imageUrl:
- *                 type: string
- *               description:
- *                 type: string
- *     responses:
- *       201:
- *         description: Успешно креиран производ
- */
 app.post('/api/products', async (req, res) => {
-    try {
-        const newProduct = new Product(req.body);
-        const savedProduct = await newProduct.save();
-        res.status(201).json(savedProduct);
-    } catch (err) {
-        res.status(400).json({ error: err.message });
-    }
+    try { res.status(201).json(await new Product(req.body).save()); } catch (err) { res.status(400).json({ error: err.message }); }
 });
-
-/**
- * @openapi
- * /api/products/{id}:
- *   put:
- *     summary: Ажурира постоечки производ
- *     tags: [Products]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Успешно ажуриран производ
- */
-app.put('/api/products/:id', async (req, res) => {
-    try {
-        const updatedProduct = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        res.json(updatedProduct);
-    } catch (err) {
-        res.status(400).json({ error: err.message });
-    }
-});
-
-/**
- * @openapi
- * /api/products/{id}:
- *   delete:
- *     summary: Брише производ по ID
- *     tags: [Products]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Производот е успешно избришан
- */
 app.delete('/api/products/:id', async (req, res) => {
-    try {
-        await Product.findByIdAndDelete(req.params.id);
-        res.json({ message: 'Производот е успешно избришан' });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+    try { await Product.findByIdAndDelete(req.params.id); res.json({ message: 'Избришано' }); } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// --- REST API РУТИ ЗА USERS ---
-
-/**
- * @openapi
- * /api/users:
- *   get:
- *     summary: Ги враќа сите корисници
- *     tags: [Users]
- *     responses:
- *       200:
- *         description: Успешно преземени сите корисници
- */
+// 2. USERS
 app.get('/api/users', async (req, res) => {
-    try {
-        const users = await User.find();
-        res.json(users);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+    try { res.json(await User.find({}, '-password')); } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-/**
- * @openapi
- * /api/users:
- *   post:
- *     summary: Креира нов корисник
- *     tags: [Users]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required: [username, email, password]
- *             properties:
- *               username:
- *                 type: string
- *               email:
- *                 type: string
- *               password:
- *                 type: string
- *               role:
- *                 type: string
- *                 default: user
- *     responses:
- *       201:
- *         description: Успешно креиран корисник
- */
-app.post('/api/users', async (req, res) => {
+app.post('/api/users/register', async (req, res) => {
     try {
         const { username, email, password, role } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
-
-        const newUser = new User({
-            username,
-            email,
-            password: hashedPassword,
-            role
-        });
-
-        const savedUser = await newUser.save();
-        res.status(201).json({
-            _id: savedUser._id,
-            username: savedUser.username,
-            email: savedUser.email,
-            role: savedUser.role
-        });
-    } catch (err) {
-        res.status(400).json({ error: err.message });
-    }
+        const newUser = new User({ username, email, password: hashedPassword, role: role || 'user' });
+        await newUser.save();
+        res.status(201).json({ message: 'Успешна регистрација' });
+    } catch (err) { res.status(400).json({ error: err.message }); }
 });
 
-/**
- * @openapi
- * /api/users/{id}:
- *   delete:
- *     summary: Брише корисник по ID
- *     tags: [Users]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Корисникот е успешно избришан
- */
-app.delete('/api/users/:id', async (req, res) => {
+app.post('/api/users/login', async (req, res) => {
     try {
-        await User.findByIdAndDelete(req.params.id);
-        res.json({ message: 'Корисникот е успешно избришан' });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+        const { username, password } = req.body;
+        const user = await User.findOne({ username });
+        if (!user || !(await bcrypt.compare(password, user.password))) {
+            return res.status(400).json({ error: 'Погрешно корисничко име или лозинка' });
+        }
+        const token = jwt.sign({ id: user._id, username: user.username, role: user.role }, JWT_SECRET, { expiresIn: '2h' });
+        res.json({ token, username: user.username, role: user.role });
+    } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// Root рута
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+// 3. CATEGORIES
+app.get('/api/categories', async (req, res) => {
+    try { res.json(await Category.find()); } catch (err) { res.status(500).json({ error: err.message }); }
+});
+app.post('/api/categories', async (req, res) => {
+    try { res.status(201).json(await new Category(req.body).save()); } catch (err) { res.status(400).json({ error: err.message }); }
 });
 
+// 4. ORDERS
+app.get('/api/orders', async (req, res) => {
+    try { res.json(await Order.find().populate('user').populate('products.product')); } catch (err) { res.status(500).json({ error: err.message }); }
+});
+app.post('/api/orders', async (req, res) => {
+    try { res.status(201).json(await new Order(req.body).save()); } catch (err) { res.status(400).json({ error: err.message }); }
+});
+
+// 5. REVIEWS
+app.get('/api/reviews', async (req, res) => {
+    try { res.json(await Review.find().populate('product')); } catch (err) { res.status(500).json({ error: err.message }); }
+});
+app.post('/api/reviews', async (req, res) => {
+    try { res.status(201).json(await new Review(req.body).save()); } catch (err) { res.status(400).json({ error: err.message }); }
+});
+
+// DATABASE ADMIN OPS
 app.delete('/db', async (req, res) => {
     try {
         await Product.deleteMany({});
@@ -329,35 +386,28 @@ app.delete('/db', async (req, res) => {
         await Category.deleteMany({});
         await Order.deleteMany({});
         await Review.deleteMany({});
-        res.json({ message: 'Базата е успешно исчистена (сите податоци се избришани).' });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+        res.json({ message: 'Сите 5 колекции се успешно избришани.' });
+    } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// 2. Внесување на иницијални (Seed) податоци
 app.post('/db', async (req, res) => {
     try {
-        // Бришење на стари за чист почеток
         await Product.deleteMany({});
         await User.deleteMany({});
         await Category.deleteMany({});
         await Order.deleteMany({});
         await Review.deleteMany({});
 
-        // Додавање категории
         const categories = await Category.insertMany([
-            { name: 'Букети', description: 'Свежи цветни букети за сите пригоди' },
+            { name: 'Букети', description: 'Свежи цветни букети' },
             { name: 'Собни растенија', description: 'Зелени саксиски растенија' }
         ]);
 
-        // Додавање производи
         const products = await Product.insertMany([
             { name: 'Црвени Рози', category: 'Букети', price: 1500, stock: 10, description: 'Букет од 101 црвена роза', imageUrl: '' },
             { name: 'Орхидеја', category: 'Собни растенија', price: 800, stock: 5, description: 'Бела елегантна орхидеја', imageUrl: '' }
         ]);
 
-        // Додавање демо администратор
         const hashedPassword = await bcrypt.hash('admin123', 10);
         const adminUser = await User.create({
             username: 'admin',
@@ -366,20 +416,36 @@ app.post('/db', async (req, res) => {
             role: 'admin'
         });
 
-        res.status(201).json({
-            message: 'Иницијалните податоци се успешно внесени!',
-            stats: {
-                categories: categories.length,
-                products: products.length,
-                adminCreated: adminUser.username
-            }
+        res.status(201).json({ message: 'Базата е успешно пополнета со иницијални податоци!', categories, products, adminUser });
+    } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// EXTERNAL CURRENCY API
+app.get('/api/convert-price/:amount', async (req, res) => {
+    try {
+        const amountInMkd = parseFloat(req.params.amount);
+        const response = await fetch('https://open.er-api.com/v6/latest/EUR');
+        const data = await response.json();
+        
+        const mkdRate = data.rates ? data.rates.MKD : 61.5;
+        const amountInEur = (amountInMkd / mkdRate).toFixed(2);
+
+        res.json({
+            originalMkd: amountInMkd,
+            convertedEur: parseFloat(amountInEur),
+            rateUsed: mkdRate,
+            source: "External Exchange Rate API"
         });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: 'Грешка при поврзување со надворешниот API сервис' });
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Серверот е активен на: http://localhost:${PORT}`);
-    console.log(`Swagger документацијата е достапна на: http://localhost:${PORT}/api-docs`);
-});
+// HTML STRANICI
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'login.html')));
+app.get('/register', (req, res) => res.sendFile(path.join(__dirname, 'register.html')));
+app.get('/add-product', (req, res) => res.sendFile(path.join(__dirname, 'add-product.html')));
+app.get('/edit-product', (req, res) => res.sendFile(path.join(__dirname, 'edit-product.html')));
+
+app.listen(PORT, () => console.log(`Серверот е активен на: http://localhost:${PORT}`));
